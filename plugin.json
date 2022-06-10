@@ -1,0 +1,13 @@
+{
+    "name": "Settings View",
+    "author": "fieldOfView",
+    "version": "0.1.0-DEV",
+    "minimum_cura_version": "4.0",
+    "maximum_cura_version": "5.0",
+    "description": "Replaces long scrolling settings view with an alternative version.",
+    "api": "6.0.0",
+    "supported_sdk_versions": [
+        "6.0.0", "6.1.0", "6.2.0", "6.3.0", "7.0.0", "7.1.0", "7.2.0", "7.3.0", "7.4.0", "7.5.0", "7.6.0", "7.7.0", "7.8.0", "7.9.0", "8.0.0"
+    ],
+    "i18n-catalog": "cura"
+}
