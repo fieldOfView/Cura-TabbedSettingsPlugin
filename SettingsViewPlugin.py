@@ -7,11 +7,15 @@ from UM.Extension import Extension
 from UM.Resources import Resources
 from UM.Logger import Logger
 
-USE_QT5 = False
 try:
+    from cura.ApplicationMetadata import CuraSDKVersion
+except ImportError: # Cura <= 3.6
+    CuraSDKVersion = "6.0.0"
+USE_QT5 = False
+if CuraSDKVersion >= "8.0.0":
     from PyQt6.QtCore import QUrl
     from PyQt6.QtQml import qmlRegisterSingletonType
-except ImportError:
+else:
     from PyQt5.QtCore import QUrl
     from PyQt5.QtQml import qmlRegisterSingletonType
 
