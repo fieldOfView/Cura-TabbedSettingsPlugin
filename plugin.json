@@ -3,7 +3,7 @@
     "author": "fieldOfView",
     "version": "0.1.0-DEV",
     "minimum_cura_version": "5.0",
-    "maximum_cura_version": "5.0",
+    "maximum_cura_version": "5.3",
     "description": "Replaces long scrolling settings view with an alternative version.",
     "supported_sdk_versions": [
         "8.0.0"

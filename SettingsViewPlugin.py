@@ -4,22 +4,8 @@
 import os.path
 from cura.CuraApplication import CuraApplication
 from UM.Extension import Extension
-from UM.Resources import Resources
 from UM.Logger import Logger
 
-try:
-    from cura.ApplicationMetadata import CuraSDKVersion
-except ImportError: # Cura <= 3.6
-    CuraSDKVersion = "6.0.0"
-USE_QT5 = False
-if CuraSDKVersion >= "8.0.0":
-    from PyQt6.QtCore import QUrl
-    from PyQt6.QtQml import qmlRegisterSingletonType
-else:
-    from PyQt5.QtCore import QUrl
-    from PyQt5.QtQml import qmlRegisterSingletonType
-
-    USE_QT5 = True
 
 class SettingsViewPlugin(Extension):
     def __init__(self):
@@ -37,11 +23,10 @@ class SettingsViewPlugin(Extension):
             )
             return
 
-        qml_folder = "qml" if not USE_QT5 else "qml_qt5"
         path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
             "resources",
-            qml_folder,
+            "qml",
             "SettingsViewPatcher.qml",
         )
 

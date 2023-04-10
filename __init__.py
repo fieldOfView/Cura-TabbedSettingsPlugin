@@ -1,12 +1,10 @@
 # Copyright (c) 2023 Aldo Hoeben / fieldOfView
 # The SettingsViewPlugin is released under the terms of the AGPLv3 or higher.
 
-import os, json
+import os
+import json
 
 from . import SettingsViewPlugin
-from UM.i18n import i18nCatalog
-
-i18n_catalog = i18nCatalog("cura")
 
 from UM.Version import Version
 from UM.Application import Application
@@ -43,7 +41,7 @@ def register(app):
 
 def __matchVersion():
     cura_version = Application.getInstance().getVersion()
-    if cura_version == "master":
+    if cura_version == "master" or cura_version == "dev":
         Logger.log("d", "Running Cura from source; skipping version check")
         return True
     if cura_version.startswith("Arachne_engine"):
