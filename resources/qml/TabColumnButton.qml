@@ -15,7 +15,7 @@ TabButton
 {
     anchors.left: parent.left
     width: parent.width
-    checked: model != undefined ? model.index == 0 : false //First button is checked by default.
+    checked: key=="_favorites" //First button is checked by default.
 
     background: Rectangle
     {
@@ -50,6 +50,16 @@ TabButton
                 }
                 color: parent.parent.color
                 width: parent.width - anchors.rightMargin
+
+                Rectangle
+                {
+                    // Hide top border of first butten
+                    color: parent.color
+                    width: parent.width
+                    height: UM.Theme.getSize("default_lining").height
+                    y: -height
+                    visible: checked && key=="_favorites"
+                }
             }
         }
     }

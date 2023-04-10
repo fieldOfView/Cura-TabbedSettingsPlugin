@@ -23,23 +23,10 @@ Item
 
         property int maxTabHeight: Math.floor((height - count * spacing) / (count+2))
 
-        /*
         TabColumnButton
         {
-            text: catalog.i18nc("@label","Search")
-            property string key: ""
-
-            contentItem: TabContentItem
-            {
-                iconSource: UM.Theme.getIcon("Magnifier")
-            }
-        }
-        */
-
-        TabColumnButton
-        {
-            text: catalog.i18nc("@label","Favorites")
-            property string key: ""
+            text: catalog.i18nc("@label:category menu label", "Favorites")
+            property string key: "_favorites"
 
             contentItem: TabContentItem
             {
@@ -86,15 +73,6 @@ Item
             exclude: ["machine_settings", "command_line_settings"]
             expanded: []
         }
-    }
-
-    Rectangle
-    {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        height: UM.Theme.getSize("default_lining").height
-        color: UM.Theme.getColor("lining")
     }
 
     Item
@@ -153,7 +131,7 @@ Item
                 containerId: Cura.MachineManager.activeMachine !== null ? Cura.MachineManager.activeMachine.definition.id: ""
                 visibilityHandler:
                 {
-                    if(selectedKey != "")
+                    if(selectedKey != "_favorites")
                     {
                         settingsViewVisibilityHandler.rootKey = selectedKey
                         return settingsViewVisibilityHandler
@@ -475,7 +453,7 @@ Item
         Component
         {
             id: settingCategory;
-            Cura.SettingCategory { }
+            SettingCategory { }
         }
 
         Component

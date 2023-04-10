@@ -12,7 +12,7 @@ Item
     id: settingsViewPatcher
     function patch(base_item)
     {
-        let isLE52 = (CuraSDKVersion <= "8.2.0")
+        var isLE52 = (CuraSDKVersion <= "8.2.0")
 
         parent = base_item
         if (isLE52) {
