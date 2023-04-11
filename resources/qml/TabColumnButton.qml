@@ -6,16 +6,18 @@
 
 import QtQuick 2.10
 import QtQuick.Controls 2.3
-import UM 1.2 as UM
+import UM 1.5 as UM
 
 /*
  * Wrapper around TabButton to use our theming and sane defaults.
  */
 TabButton
 {
+    property string key: ""
+    property var iconSource
+
     anchors.left: parent.left
     width: parent.width
-    checked: key=="_favorites" //First button is checked by default.
 
     background: Rectangle
     {
@@ -63,14 +65,18 @@ TabButton
             }
         }
     }
-    contentItem: Label
+
+    contentItem: TabContentItem
     {
-        anchors.centerIn: parent
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        text: parent.text
-        font: parent.checked ? UM.Theme.getFont("default_bold") : UM.Theme.getFont("default")
-        color: UM.Theme.getColor("text")
-        renderType: Text.NativeRendering
+        iconSource: parent.iconSource
+    }
+
+    UM.ToolTip
+    {
+        id: tooltip
+
+        tooltipText: parent.text
+        visible: parent.hovered
+        contentAlignment: UM.Enums.ContentAlignment.AlignLeft
     }
 }

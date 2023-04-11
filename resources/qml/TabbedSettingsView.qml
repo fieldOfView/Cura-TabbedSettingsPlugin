@@ -41,24 +41,17 @@ Item
 
         TabColumnButton
         {
+            key: "_favorites"
             text: catalog.i18nc("@label:category menu label", "Favorites")
-            property string key: "_favorites"
-
-            contentItem: TabContentItem
-            {
-                iconSource: UM.Theme.getIcon("Star")
-            }
+            iconSource: UM.Theme.getIcon("Star")
+            checked: true
         }
 
         TabColumnButton
         {
-            text: catalog.i18nc("@label","Changed settings")
-            property string key: "_user"
-
-            contentItem: TabContentItem
-            {
-                iconSource: UM.Theme.getIcon("ArrowReset")
-            }
+            key: "_user"
+            text: catalog.i18nc("@label:category menu label", "Changed settings")
+            iconSource: UM.Theme.getIcon("ArrowReset")
         }
 
         Repeater
@@ -67,13 +60,9 @@ Item
 
             TabColumnButton
             {
+                key: model.key
                 text: model.label
-                property string key: model.key
-
-                contentItem: TabContentItem
-                {
-                    iconSource: UM.Theme.getIcon(model.icon)
-                }
+                iconSource: UM.Theme.getIcon(model.icon)
             }
         }
 
