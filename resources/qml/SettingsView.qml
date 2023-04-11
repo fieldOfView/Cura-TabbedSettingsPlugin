@@ -125,22 +125,28 @@ Item
                 property string selectedKey: categoryTabs.itemAt(categoryTabs.currentIndex).key
                 property var settingPreferenceVisibilityHandler: UM.SettingPreferenceVisibilityHandler {}
                 property var perCategoryVisibilityHandler: Cura.PerCategoryVisibilityHandler {}
-                property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler {}
+                property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler
+                {
+                    active: false
+                    containerIndex: 0
+                }
 
                 containerId: Cura.MachineManager.activeMachine !== null ? Cura.MachineManager.activeMachine.definition.id: ""
                 visibilityHandler:
                 {
                     if(selectedKey == "_favorites")
                     {
+                        instanceContainerVisibilityHandler.active = false
                         return settingPreferenceVisibilityHandler
                     }
                     else if(selectedKey == "_user")
                     {
-                        instanceContainerVisibilityHandler.containerIndex = 0
+                        instanceContainerVisibilityHandler.active = true
                         return instanceContainerVisibilityHandler
                     }
                     else
                     {
+                        instanceContainerVisibilityHandler.active = false
                         perCategoryVisibilityHandler.rootKey = selectedKey
                         return perCategoryVisibilityHandler
                     }
@@ -148,7 +154,7 @@ Item
                 exclude: ["machine_settings", "command_line_settings", "infill_mesh", "infill_mesh_order", "cutting_mesh", "support_mesh", "anti_overhang_mesh"] // TODO: infill_mesh settings are excluded hardcoded, but should be based on the fact that settable_globally, settable_per_meshgroup and settable_per_extruder are false.
                 expanded:
                 {
-                    if(selectedKey != "")
+                    if(selectedKey != "_favorites")
                     {
                         return ["*"]
                     }

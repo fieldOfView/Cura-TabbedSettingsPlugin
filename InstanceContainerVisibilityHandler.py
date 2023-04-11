@@ -13,7 +13,9 @@ from PyQt6.QtCore import pyqtProperty, pyqtSignal
 class InstanceContainerVisibilityHandler(SettingVisibilityHandler):
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
+        self._active = True
         self._container_index = -1
+        self._visible_settings = set()
 
         self._machine_manager = CuraApplication.getInstance().getMachineManager()
         self._machine_manager.activeStackChanged.connect(self._update)
@@ -32,8 +34,22 @@ class InstanceContainerVisibilityHandler(SettingVisibilityHandler):
     def containerIndex(self) -> int:
         return self._container_index
 
+    def setActive(self, active: bool) -> None:
+        if active == self._active:
+            return
+
+        self._active = active
+        self._update()
+
+    activeChanged = pyqtSignal()
+
+    @pyqtProperty(bool, notify=activeChanged, fset=setActive)
+    def active(self) -> bool:
+        return self._active
+
     def _update(self) -> None:
-        visible_settings = set()
+        if not self._active:
+            return
 
         if self._container_index == -1:
             Logger.log("w", "Tried to update model, but there is no container index")
@@ -49,7 +65,12 @@ class InstanceContainerVisibilityHandler(SettingVisibilityHandler):
             Logger.log("w", "Tried to update model, but there is no extruder stack")
             return
 
+        visible_settings = set()
+
         for stack in [global_container_stack, extruder_stack]:
             visible_settings.update(stack.getContainer(self._container_index).getAllKeys())
 
-        self.setVisible(visible_settings)
+        if self._visible_settings != visible_settings:
+            self._visible_settings = visible_settings
+
+            self.setVisible(visible_settings)
