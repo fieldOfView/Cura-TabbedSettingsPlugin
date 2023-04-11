@@ -124,7 +124,7 @@ Item
 
                 property string selectedKey: categoryTabs.itemAt(categoryTabs.currentIndex).key
                 property var settingPreferenceVisibilityHandler: UM.SettingPreferenceVisibilityHandler {}
-                property var settingsViewVisibilityHandler: Cura.SettingsViewVisibilityHandler {}
+                property var perCategoryVisibilityHandler: Cura.PerCategoryVisibilityHandler {}
                 property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler {}
 
                 containerId: Cura.MachineManager.activeMachine !== null ? Cura.MachineManager.activeMachine.definition.id: ""
@@ -141,8 +141,8 @@ Item
                     }
                     else
                     {
-                        settingsViewVisibilityHandler.rootKey = selectedKey
-                        return settingsViewVisibilityHandler
+                        perCategoryVisibilityHandler.rootKey = selectedKey
+                        return perCategoryVisibilityHandler
                     }
                 }
                 exclude: ["machine_settings", "command_line_settings", "infill_mesh", "infill_mesh_order", "cutting_mesh", "support_mesh", "anti_overhang_mesh"] // TODO: infill_mesh settings are excluded hardcoded, but should be based on the fact that settable_globally, settable_per_meshgroup and settable_per_extruder are false.

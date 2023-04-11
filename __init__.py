@@ -11,7 +11,7 @@ from UM.Logger import Logger
 from PyQt6.QtQml import qmlRegisterType
 
 from . import SettingsViewPlugin
-from . import SettingsViewVisibilityHandler
+from . import PerCategoryVisibilityHandler
 from . import InstanceContainerVisibilityHandler
 
 
@@ -25,9 +25,9 @@ def register(app):
         return {}
 
     qmlRegisterType(
-        SettingsViewVisibilityHandler.SettingsViewVisibilityHandler,
+        PerCategoryVisibilityHandler.PerCategoryVisibilityHandler,
         "Cura", 1, 0,
-        "SettingsViewVisibilityHandler",
+        "PerCategoryVisibilityHandler",
     )
     qmlRegisterType(
         InstanceContainerVisibilityHandler.InstanceContainerVisibilityHandler,

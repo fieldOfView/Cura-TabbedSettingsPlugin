@@ -10,7 +10,7 @@ from UM.FlameProfiler import pyqtSlot
 from PyQt6.QtCore import pyqtProperty, pyqtSignal
 
 
-class SettingsViewVisibilityHandler(SettingVisibilityHandler):
+class PerCategoryVisibilityHandler(SettingVisibilityHandler):
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
         self._root_key = ""
@@ -25,12 +25,12 @@ class SettingsViewVisibilityHandler(SettingVisibilityHandler):
 
         global_container_stack = CuraApplication.getInstance().getGlobalContainerStack()
         if not global_container_stack:
-            Logger.log("e", "Tried to set root of SettingsViewVisibilityHandler but there is no global stack")
+            Logger.log("e", "Tried to set root of PerCategoryVisibilityHandler but there is no global stack")
             return
 
         definitions = global_container_stack.getBottom().findDefinitions(key=root_key)
         if not definitions:
-            Logger.log("w", "Tried to set root of SettingsViewVisibilityHandler to an unknown definition")
+            Logger.log("w", "Tried to set root of PerCategoryVisibilityHandler to an unknown definition")
             return
 
         visible_settings = set([d.key for d in definitions[0].findDefinitions()])
