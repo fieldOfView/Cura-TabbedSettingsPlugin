@@ -4,22 +4,15 @@
 import os
 import json
 
-from . import SettingsViewPlugin
-
 from UM.Version import Version
 from UM.Application import Application
 from UM.Logger import Logger
 
-try:
-    from cura.ApplicationMetadata import CuraSDKVersion
-except ImportError: # Cura <= 3.6
-    CuraSDKVersion = "6.0.0"
-if CuraSDKVersion >= "8.0.0":
-    from PyQt6.QtQml import qmlRegisterType
-else:
-    from PyQt5.QtQml import qmlRegisterType
+from PyQt6.QtQml import qmlRegisterType
 
+from . import SettingsViewPlugin
 from . import SettingsViewVisibilityHandler
+from . import InstanceContainerVisibilityHandler
 
 
 def getMetaData():
@@ -35,6 +28,11 @@ def register(app):
         SettingsViewVisibilityHandler.SettingsViewVisibilityHandler,
         "Cura", 1, 0,
         "SettingsViewVisibilityHandler",
+    )
+    qmlRegisterType(
+        InstanceContainerVisibilityHandler.InstanceContainerVisibilityHandler,
+        "Cura", 1, 0,
+        "InstanceContainerVisibilityHandler",
     )
     return {"extension": SettingsViewPlugin.SettingsViewPlugin()}
 
@@ -60,7 +58,7 @@ def __matchVersion():
             plugin_info = json.load(plugin_file)
             minimum_cura_version = Version(plugin_info["minimum_cura_version"])
             maximum_cura_version = Version(plugin_info["maximum_cura_version"])
-    except:
+    except Exception:
         Logger.log("w", "Could not get version information for the plugin")
         return False
 
