@@ -10,6 +10,22 @@ import Cura 1.0 as Cura
 Item
 {
     id: settingsView
+
+    property var tooltipItem
+    property var backgroundItem
+
+    function showTooltip(item, position, text)
+    {
+        tooltipItem.text = text;
+        position = item.mapToItem(backgroundItem, position.x - UM.Theme.getSize("default_arrow").width, position.y);
+        tooltipItem.show(position);
+    }
+
+    function hideTooltip()
+    {
+        tooltipItem.hide();
+    }
+
     anchors.fill: parent
     anchors.margins: UM.Theme.getSize("default_lining").width
 
@@ -278,8 +294,14 @@ Item
                         contextMenu.provider = provider
                         contextMenu.popup()                    //iconName: model.icon_name
                     }
-                    //function onShowTooltip(text) { base.showTooltip(delegate, Qt.point(-settingsView.x - UM.Theme.getSize("default_margin").width, 0), text) }
-                    //function onHideTooltip() { base.hideTooltip() }
+                    function onShowTooltip(text) {
+                        settingsView.showTooltip(
+                            delegate,
+                            Qt.point(-settingsView.x - 2 * UM.Theme.getSize("default_lining").width, 0),
+                            text
+                        )
+                    }
+                    function onHideTooltip() { settingsView.hideTooltip() }
                     function onShowAllHiddenInheritedSettings()
                     {
                         var children_with_override = Cura.SettingInheritanceManager.getChildrenKeysWithOverride(category_id)

@@ -17,8 +17,10 @@ Item
         parent = base_item
         if (isLE52) {
             var contentItem = parent.children[3].children[3]
+            var tooltipItem = parent.children[3].children[4]
         } else {
             var contentItem = parent.children[4].children[3]
+            var tooltipItem = parent.children[4].children[4]
         }
         var stageMenu = contentItem.children[7]
 
@@ -27,6 +29,9 @@ Item
         var printSetupChildren = printSetupContent.children[1]
         var customPrintSetup = printSetupChildren.children[1]
         customPrintSetup.children = [settingsView]
+
+        settingsView.backgroundItem = parent.children[0]
+        settingsView.tooltipItem = tooltipItem
     }
 
     SettingsView
