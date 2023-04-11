@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Aldo Hoeben / fieldOfView
-// SettingsViewPlugin is released under the terms of the AGPLv3 or higher.
+// TabbedSettingsPlugin is released under the terms of the AGPLv3 or higher.
 
 // Copyright (c) 2018 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.

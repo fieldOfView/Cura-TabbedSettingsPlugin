@@ -1,5 +1,5 @@
 # Copyright (c) 2023 Aldo Hoeben / fieldOfView
-# The SettingsViewPlugin is released under the terms of the AGPLv3 or higher.
+# The TabbedSettingsPlugin is released under the terms of the AGPLv3 or higher.
 
 import os.path
 from cura.CuraApplication import CuraApplication
@@ -7,7 +7,7 @@ from UM.Extension import Extension
 from UM.Logger import Logger
 
 
-class SettingsViewPlugin(Extension):
+class TabbedSettingsPlugin(Extension):
     def __init__(self):
         super().__init__()
 
@@ -35,7 +35,7 @@ class SettingsViewPlugin(Extension):
         )
         if not self._qml_patcher:
             Logger.log(
-                "w", "Could not create qml components for SettingsViewPlugin"
+                "w", "Could not create qml components for TabbedSettingsPlugin"
             )
             return
 

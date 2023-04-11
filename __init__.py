@@ -1,5 +1,5 @@
 # Copyright (c) 2023 Aldo Hoeben / fieldOfView
-# The SettingsViewPlugin is released under the terms of the AGPLv3 or higher.
+# The TabbedSettingsPlugin is released under the terms of the AGPLv3 or higher.
 
 import os
 import json
@@ -10,7 +10,7 @@ from UM.Logger import Logger
 
 from PyQt6.QtQml import qmlRegisterType
 
-from . import SettingsViewPlugin
+from . import TabbedSettingsPlugin
 from . import PerCategoryVisibilityHandler
 from . import InstanceContainerVisibilityHandler
 
@@ -34,7 +34,7 @@ def register(app):
         "Cura", 1, 0,
         "InstanceContainerVisibilityHandler",
     )
-    return {"extension": SettingsViewPlugin.SettingsViewPlugin()}
+    return {"extension": TabbedSettingsPlugin.TabbedSettingsPlugin()}
 
 
 def __matchVersion():

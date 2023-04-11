@@ -1,5 +1,5 @@
 # Copyright (c) 2023 Aldo Hoeben / fieldOfView
-# The SettingsViewPlugin is released under the terms of the AGPLv3 or higher.
+# The TabbedSettingsPlugin is released under the terms of the AGPLv3 or higher.
 
 from UM.Settings.Models.SettingVisibilityHandler import SettingVisibilityHandler
 from cura.CuraApplication import CuraApplication

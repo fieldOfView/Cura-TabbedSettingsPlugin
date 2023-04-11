@@ -1,5 +1,5 @@
 // Copyright (c) 2023 Aldo Hoeben / fieldOfView
-// SettingsViewPlugin is released under the terms of the AGPLv3 or higher.
+// TabbedSettingsPlugin is released under the terms of the AGPLv3 or higher.
 
 import QtQuick 2.15
 import QtQuick.Controls 2.4
