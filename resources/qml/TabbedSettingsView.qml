@@ -14,6 +14,8 @@ Item
     property var tooltipItem
     property var backgroundItem
 
+    property string selectedKey: categoryTabs.itemAt(categoryTabs.currentIndex).key
+
     function showTooltip(item, position, text)
     {
         tooltipItem.text = text;
@@ -85,7 +87,169 @@ Item
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.margins: UM.Theme.getSize("default_margin").width
-        anchors.topMargin: 0
+
+        Item
+        {
+            id: filterRow
+            property QtObject settingVisibilityPresetsModel: CuraApplication.getSettingVisibilityPresetsModel()
+            property bool findingSettings
+
+            width: parent.width
+            height: UM.Theme.getSize("print_setup_big_item").height
+
+            onVisibleChanged: filter.text = ""
+
+            Item
+            {
+                id: filterContainer
+
+                anchors
+                {
+                    top: parent.top
+                    left: parent.left
+                    right: settingVisibilityMenu.left
+                }
+                height: UM.Theme.getSize("print_setup_big_item").height
+
+                Timer
+                {
+                    id: settingsSearchTimer
+                    onTriggered: filter.editingFinished()
+                    interval: 500
+                    running: false
+                    repeat: false
+                }
+
+                Cura.TextField
+                {
+                    id: filter
+                    height: parent.height
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    topPadding: height / 4
+                    leftPadding: searchIcon.width + UM.Theme.getSize("default_margin").width * 2
+                    placeholderText: catalog.i18nc("@label:textbox", "Search settings")
+                    font: UM.Theme.getFont("default_italic")
+
+                    property var expandedCategories
+                    property bool lastFindingSettings: false
+
+                    UM.ColorImage
+                    {
+                        id: searchIcon
+
+                        anchors
+                        {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: UM.Theme.getSize("default_margin").width
+                        }
+                        source: UM.Theme.getIcon("Magnifier")
+                        height: UM.Theme.getSize("small_button_icon").height
+                        width: height
+                        color: UM.Theme.getColor("text")
+                    }
+
+                    onTextChanged: settingsSearchTimer.restart()
+
+                    onEditingFinished:
+                    {
+                        definitionsModel.filter = {"i18n_label|i18n_description" : "*" + text}
+                        filterRow.findingSettings = (text.length > 0)
+                        if (filterRow.findingSettings != lastFindingSettings)
+                        {
+                            updateDefinitionModel()
+                            lastFindingSettings = filterRow.findingSettings
+                        }
+                    }
+
+                    Keys.onEscapePressed: filter.text = ""
+
+                    function updateDefinitionModel()
+                    {
+                        if (filterRow.findingSettings)
+                        {
+                            expandedCategories = definitionsModel.expanded.slice()
+                            definitionsModel.expanded = [""]  // keep categories closed while to prevent render while making settings visible one by one
+                            definitionsModel.showAncestors = true
+                            definitionsModel.showAll = true
+                            definitionsModel.expanded = ["*"]
+                        }
+                        else
+                        {
+                            if (expandedCategories)
+                            {
+                                definitionsModel.expanded = expandedCategories
+                            }
+                            definitionsModel.showAncestors = false
+                            definitionsModel.showAll = false
+                        }
+                    }
+                }
+
+                UM.SimpleButton
+                {
+                    id: clearFilterButton
+                    iconSource: UM.Theme.getIcon("Cancel")
+                    visible: filterRow.findingSettings
+
+                    height: Math.round(parent.height * 0.4)
+                    width: visible ? height : 0
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: UM.Theme.getSize("default_margin").width
+
+                    color: UM.Theme.getColor("setting_control_button")
+                    hoverColor: UM.Theme.getColor("setting_control_button_hover")
+
+                    onClicked:
+                    {
+                        filter.text = ""
+                        filter.forceActiveFocus()
+                    }
+                }
+            }
+
+            Cura.SettingVisibilityPresetsMenu
+            {
+                id: settingVisibilityPresetsMenu
+                onCollapseAllCategories:
+                {
+                    settingsSearchTimer.stop()
+                    filter.text = "" // clear search field
+                    filter.editingFinished()
+                    definitionsModel.collapseAllCategories()
+                }
+            }
+
+            UM.BurgerButton
+            {
+                id: settingVisibilityMenu
+
+                anchors
+                {
+                    verticalCenter: filterContainer.verticalCenter
+                    right: parent.right
+                }
+
+                onClicked:
+                {
+                    settingVisibilityPresetsMenu.popup(
+                        popupContainer,
+                        -settingVisibilityPresetsMenu.width + UM.Theme.getSize("default_margin").width,
+                        settingVisibilityMenu.height
+                    )
+                }
+            }
+            Item
+            {
+                // Work around to prevent the buttom from being rescaled if a popup is attached
+                id: popupContainer
+                anchors.bottom: settingVisibilityMenu.bottom
+                anchors.right: settingVisibilityMenu.right
+            }
+        }
 
         // Mouse area that gathers the scroll events to not propagate it to the main view.
         MouseArea
@@ -101,8 +265,8 @@ Item
             maximumFlickVelocity: 1000 * screenScaleFactor
             anchors
             {
-                top: parent.top
-                topMargin: UM.Theme.getSize("default_margin").height
+                top: filterRow.visible ? filterRow.bottom : parent.top
+                topMargin: filterRow.visible ? UM.Theme.getSize("default_margin").height : 0
                 bottom: parent.bottom
                 right: parent.right
                 left: parent.left
@@ -127,7 +291,6 @@ Item
             {
                 id: definitionsModel
 
-                property string selectedKey: categoryTabs.itemAt(categoryTabs.currentIndex).key
                 property var settingPreferenceVisibilityHandler: UM.SettingPreferenceVisibilityHandler {}
                 property var perCategoryVisibilityHandler: Cura.PerCategoryVisibilityHandler {}
                 property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler
@@ -141,16 +304,19 @@ Item
                 {
                     if(selectedKey == "_favorites")
                     {
+                        filterRow.visible = true
                         instanceContainerVisibilityHandler.active = false
                         return settingPreferenceVisibilityHandler
                     }
                     else if(selectedKey == "_user")
                     {
+                        filterRow.visible = false
                         instanceContainerVisibilityHandler.active = true
                         return instanceContainerVisibilityHandler
                     }
                     else
                     {
+                        filterRow.visible = false
                         instanceContainerVisibilityHandler.active = false
                         perCategoryVisibilityHandler.rootKey = selectedKey
                         return perCategoryVisibilityHandler
@@ -211,7 +377,10 @@ Item
                         case "str":
                             return settingTextField
                         case "category":
-                            return settingCategory
+                            if (selectedKey == "_favorites")
+                                return settingCategory
+                            else
+                                return minimalSettingCategory
                         default:
                             return settingUnknown
                     }
@@ -391,7 +560,7 @@ Item
             Cura.MenuItem
             {
                 //: Settings context menu action
-                visible: !findingSettings
+                visible: filterRow.visible && !filterRow.findingSettings
                 text: catalog.i18nc("@action:menu", "Hide this setting")
                 onTriggered:
                 {
@@ -412,7 +581,7 @@ Item
                         return catalog.i18nc("@action:menu", "Keep this setting visible")
                     }
                 }
-                visible: findingSettings
+                visible: filterRow.visible && filterRow.findingSettings
                 onTriggered:
                 {
                     if (contextMenu.settingVisible)
@@ -477,6 +646,12 @@ Item
         Component
         {
             id: settingCategory;
+            Cura.SettingCategory { }
+        }
+
+        Component
+        {
+            id: minimalSettingCategory;
             SettingCategory { }
         }
 
