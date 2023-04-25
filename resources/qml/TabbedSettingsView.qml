@@ -14,7 +14,35 @@ Item
     property var tooltipItem
     property var backgroundItem
 
+    property var settingPreferenceVisibilityHandler: UM.SettingPreferenceVisibilityHandler {}
+    property var perCategoryVisibilityHandler: Cura.PerCategoryVisibilityHandler {}
+    property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler
+    {
+        active: false
+        containerIndex: 0
+    }
+
     property string selectedKey: categoryTabs.itemAt(categoryTabs.currentIndex).key
+    onSelectedKeyChanged:
+    {
+        filter.text = ""
+        filterRow.visible = selectedKey == "_favorites"
+        instanceContainerVisibilityHandler.active = selectedKey == "_user"
+
+        if(selectedKey == "_favorites")
+        {
+            definitionsModel.visibilityHandler = settingPreferenceVisibilityHandler
+        }
+        else if(selectedKey == "_user")
+        {
+            definitionsModel.visibilityHandler = instanceContainerVisibilityHandler
+        }
+        else
+        {
+            perCategoryVisibilityHandler.rootKey = selectedKey
+            definitionsModel.visibilityHandler = perCategoryVisibilityHandler
+        }
+    }
 
     anchors.fill: parent
     anchors.margins: UM.Theme.getSize("default_lining").width
@@ -84,8 +112,6 @@ Item
 
             width: parent.width
             height: UM.Theme.getSize("print_setup_big_item").height
-
-            onVisibleChanged: filter.text = ""
 
             Item
             {
@@ -267,49 +293,17 @@ Item
                 onPositionChanged: {
                     // This removes focus from items when scrolling.
                     // This fixes comboboxes staying open and scrolling container
-                    /*
                     if (!activeFocus && !filter.activeFocus) {
                         forceActiveFocus();
                     }
-                    */
                 }
             }
 
             model: UM.SettingDefinitionsModel
             {
                 id: definitionsModel
-
-                property var settingPreferenceVisibilityHandler: UM.SettingPreferenceVisibilityHandler {}
-                property var perCategoryVisibilityHandler: Cura.PerCategoryVisibilityHandler {}
-                property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler
-                {
-                    active: false
-                    containerIndex: 0
-                }
-
                 containerId: Cura.MachineManager.activeMachine !== null ? Cura.MachineManager.activeMachine.definition.id: ""
-                visibilityHandler:
-                {
-                    if(selectedKey == "_favorites")
-                    {
-                        filterRow.visible = true
-                        instanceContainerVisibilityHandler.active = false
-                        return settingPreferenceVisibilityHandler
-                    }
-                    else if(selectedKey == "_user")
-                    {
-                        filterRow.visible = false
-                        instanceContainerVisibilityHandler.active = true
-                        return instanceContainerVisibilityHandler
-                    }
-                    else
-                    {
-                        filterRow.visible = false
-                        instanceContainerVisibilityHandler.active = false
-                        perCategoryVisibilityHandler.rootKey = selectedKey
-                        return perCategoryVisibilityHandler
-                    }
-                }
+
                 exclude: ["machine_settings", "command_line_settings", "infill_mesh", "infill_mesh_order", "cutting_mesh", "support_mesh", "anti_overhang_mesh"] // TODO: infill_mesh settings are excluded hardcoded, but should be based on the fact that settable_globally, settable_per_meshgroup and settable_per_extruder are false.
                 expanded:
                 {
@@ -318,6 +312,15 @@ Item
                         return ["*"]
                     }
                     return CuraApplication.expandedCategories
+                }
+                onExpandedChanged:
+                {
+                    if (!filterRow.findingSettings && selectedKey == "_favorites")
+                    {
+                        // Do not change expandedCategories preference while filtering settings
+                        // because all categories are expanded while filtering
+                        CuraApplication.setExpandedCategories(expanded)
+                    }
                 }
                 onVisibilityChanged: Cura.SettingInheritanceManager.scheduleUpdate()
             }
