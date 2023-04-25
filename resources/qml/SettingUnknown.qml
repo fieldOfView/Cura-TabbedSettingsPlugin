@@ -3,4 +3,4 @@
 
 import Cura 1.5 as Cura
 
-Cura.SettingCategory {}
+Cura.SettingUnknown {}

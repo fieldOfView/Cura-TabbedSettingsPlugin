@@ -256,6 +256,7 @@ Item
                     )
                 }
             }
+
             Item
             {
                 // Work around to prevent the buttom from being rescaled if a popup is attached
@@ -347,33 +348,36 @@ Item
                 asynchronous: model.type !== "enum" && model.type !== "extruder" && model.type !== "optional_extruder"
                 active: model.type !== undefined
 
-                sourceComponent:
+                //If we use sourcecomponents, there's a QML warning storm when components get destroyed, so we use a
+                //set of stub qml files instead
+                source:
                 {
                     switch(model.type)
                     {
                         case "int":
-                            return settingTextField
+                            return "SettingTextField.qml"
                         case "[int]":
-                            return settingTextField
+                            return "SettingTextField.qml"
                         case "float":
-                            return settingTextField
+                            return "SettingTextField.qml"
                         case "enum":
-                            return settingComboBox
+                            return "SettingComboBox.qml"
                         case "extruder":
-                            return settingExtruder
-                        case "optional_extruder":
-                            return settingOptionalExtruder
+                            return "SettingExtruder.qml"
                         case "bool":
-                            return settingCheckBox
+                            return "SettingCheckBox.qml"
                         case "str":
-                            return settingTextField
+                            return "SettingTextField.qml"
                         case "category":
-                            if (selectedKey == "_favorites")
-                                return settingCategory
-                            else
-                                return minimalSettingCategory
+                            if (selectedKey != "_favorites")
+                            {
+                                return "SettingCategory.qml"
+                            }
+                            return "SettingCategoryMinimal.qml"
+                        case "optional_extruder":
+                            return "SettingOptionalExtruder.qml"
                         default:
-                            return settingUnknown
+                            return "SettingUnknown.qml"
                     }
                 }
 
@@ -602,54 +606,6 @@ Item
             key: "machine_extruder_count"
             watchedProperties: [ "value" ]
             storeIndex: 0
-        }
-
-        Component
-        {
-            id: settingTextField;
-            Cura.SettingTextField { }
-        }
-
-        Component
-        {
-            id: settingComboBox;
-            Cura.SettingComboBox { }
-        }
-
-        Component
-        {
-            id: settingExtruder;
-            Cura.SettingExtruder { }
-        }
-
-        Component
-        {
-            id: settingOptionalExtruder;
-            Cura.SettingOptionalExtruder { }
-        }
-
-        Component
-        {
-            id: settingCheckBox;
-            Cura.SettingCheckBox { }
-        }
-
-        Component
-        {
-            id: settingCategory;
-            Cura.SettingCategory { }
-        }
-
-        Component
-        {
-            id: minimalSettingCategory;
-            SettingCategory { }
-        }
-
-        Component
-        {
-            id: settingUnknown;
-            Cura.SettingUnknown { }
         }
     }
 
