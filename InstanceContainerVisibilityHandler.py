@@ -66,9 +66,21 @@ class InstanceContainerVisibilityHandler(SettingVisibilityHandler):
             return
 
         visible_settings = set()
+        visible_categories = set()
 
         for stack in [global_container_stack, extruder_stack]:
-            visible_settings.update(stack.getContainer(self._container_index).getAllKeys())
+            container = stack.getContainer(self._container_index)
+            stack_settings = container.getAllKeys()
+            visible_settings.update(stack_settings)
+
+            # also make the categories of these settings visible
+            for setting_key in stack_settings:
+                category = container.getInstance(setting_key).definition
+                while category is not None and category.type != "category":
+                    category = category.parent
+                if category is not None:
+                    visible_categories.add(category.key)
+            visible_settings.update(visible_categories)
 
         if self._visible_settings != visible_settings:
             self._visible_settings = visible_settings
