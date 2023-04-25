@@ -369,7 +369,7 @@ Item
                         case "str":
                             return "SettingTextField.qml"
                         case "category":
-                            if (selectedKey != "_favorites")
+                            if (selectedKey == "_favorites")
                             {
                                 return "SettingCategory.qml"
                             }
