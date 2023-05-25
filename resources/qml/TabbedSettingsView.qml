@@ -23,9 +23,23 @@ Item
     }
 
     property string selectedKey: categoryTabs.itemAt(categoryTabs.currentIndex).key
+    property string lastSelectedKey: ""
     onSelectedKeyChanged:
     {
-        filter.text = ""
+        clearFilter()
+        if (lastSelectedKey == "_favorites" && selectedKey != "_favorites")
+        {
+            filter.expandedCategories = definitionsModel.expanded.slice()
+            definitionsModel.expanded = ["*"]
+        }
+        if (lastSelectedKey != "_favorites" && selectedKey == "_favorites")
+        {
+            if (filter.expandedCategories)
+            {
+                definitionsModel.expanded = filter.expandedCategories
+            }
+        }
+
         filterRow.visible = selectedKey == "_favorites"
         instanceContainerVisibilityHandler.active = selectedKey == "_user"
 
@@ -42,6 +56,15 @@ Item
             perCategoryVisibilityHandler.rootKey = selectedKey
             definitionsModel.visibilityHandler = perCategoryVisibilityHandler
         }
+
+        lastSelectedKey = selectedKey
+    }
+
+    function clearFilter()
+    {
+        settingsSearchTimer.stop()
+        filter.text = "" // clear search field
+        filter.editingFinished()
     }
 
     anchors.fill: parent
@@ -177,7 +200,7 @@ Item
                         }
                     }
 
-                    Keys.onEscapePressed: filter.text = ""
+                    Keys.onEscapePressed: settingsView.clearFilter()
 
                     function updateDefinitionModel()
                     {
@@ -219,7 +242,7 @@ Item
 
                     onClicked:
                     {
-                        filter.text = ""
+                        clearFilter()
                         filter.forceActiveFocus()
                     }
                 }
@@ -230,9 +253,7 @@ Item
                 id: settingVisibilityPresetsMenu
                 onCollapseAllCategories:
                 {
-                    settingsSearchTimer.stop()
-                    filter.text = "" // clear search field
-                    filter.editingFinished()
+                    clearFilter()
                     definitionsModel.collapseAllCategories()
                 }
             }
