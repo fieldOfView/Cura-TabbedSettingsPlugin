@@ -1,7 +1,7 @@
 {
     "name": "Tabbed Settings",
     "author": "fieldOfView",
-    "version": "1.0.1",
+    "version": "1.0.2-DEV",
     "minimum_cura_version": "5.0",
     "maximum_cura_version": "5.4",
     "description": "Replaces the long scrolling settings view with a tabbed alternative.",
