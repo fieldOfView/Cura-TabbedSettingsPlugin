@@ -30,8 +30,15 @@ class TabbedSettingsPlugin(Extension):
             "SettingsViewPatcher.qml",
         )
 
+        plugin_registry = CuraApplication.getInstance().getPluginRegistry()
+        preferences = CuraApplication.getInstance().getPreferences()
+        has_sidebar_gui = (
+            plugin_registry.getMetaData("SidebarGUIPlugin") != {} and
+            preferences._findPreference("sidebargui/expand_legend") is not None
+        )
+
         self._qml_patcher = CuraApplication.getInstance().createQmlComponent(
-            path, {"settingsViewPlugin": self}
+            path, {"withSidebarGUI": has_sidebar_gui}
         )
         if not self._qml_patcher:
             Logger.log(

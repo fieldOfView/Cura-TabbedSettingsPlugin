@@ -27,9 +27,14 @@ Item
         var printSetupSelector = stageMenu.printSetupSelector
         var printSetupContent = printSetupSelector.contentItem
         var printSetupChildren = printSetupContent.children[1]
-        var customPrintSetup = printSetupChildren.children[1]
-        customPrintSetup.children = [tabbedSettingsView]
 
+        var customPrintSetup = printSetupChildren.children[1]
+        var profileSelectorRow = customPrintSetup.children[0]
+        customPrintSetup.children = [tabbedSettingsView]
+        if(!withSidebarGUI)
+        {
+            tabbedSettingsView.children[0].children = [profileSelectorRow]
+        }
         tabbedSettingsView.backgroundItem = parent.children[0]
         tabbedSettingsView.tooltipItem = tooltipItem
     }

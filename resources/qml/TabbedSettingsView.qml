@@ -72,13 +72,26 @@ Item
 
     UM.I18nCatalog { id: catalog; name: "cura"; }
 
+    Item
+    {
+        id: profileSelectorRow
+        height: childrenRect.height
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+        anchors.rightMargin: UM.Theme.getSize("default_margin").width
+    }
+
     TabColumn
     {
         id: categoryTabs
         width: 3 * UM.Theme.getSize("default_margin").width
         spacing: - UM.Theme.getSize("default_lining").height
+        anchors.top: profileSelectorRow.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
+        anchors.bottom: parent.bottom
 
-        property int maxTabHeight: Math.floor((height - count * spacing) / (count+2))
+        property int maxTabHeight: Math.floor((height - (count * spacing)) / (count + 2))
 
         TabColumnButton
         {
@@ -123,7 +136,7 @@ Item
     {
         anchors.left: categoryTabs.right
         anchors.right: parent.right
-        anchors.top: parent.top
+        anchors.top: profileSelectorRow.bottom
         anchors.bottom: parent.bottom
         anchors.margins: UM.Theme.getSize("default_margin").width
 
