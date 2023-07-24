@@ -13,6 +13,7 @@ from PyQt6.QtQml import qmlRegisterType
 from . import TabbedSettingsPlugin
 from . import PerCategoryVisibilityHandler
 from . import InstanceContainerVisibilityHandler
+from . import ExtendedSettingPreferenceVisibilityHandler
 
 
 def getMetaData():
@@ -33,6 +34,11 @@ def register(app):
         InstanceContainerVisibilityHandler.InstanceContainerVisibilityHandler,
         "Cura", 1, 0,
         "InstanceContainerVisibilityHandler",
+    )
+    qmlRegisterType(
+        ExtendedSettingPreferenceVisibilityHandler.ExtendedSettingPreferenceVisibilityHandler,
+        "Cura", 1, 0,
+        "ExtendedSettingPreferenceVisibilityHandler",
     )
     return {"extension": TabbedSettingsPlugin.TabbedSettingsPlugin()}
 

@@ -14,7 +14,7 @@ Item
     property var tooltipItem
     property var backgroundItem
 
-    property var settingPreferenceVisibilityHandler: UM.SettingPreferenceVisibilityHandler {}
+    property var settingPreferenceVisibilityHandler: Cura.ExtendedSettingPreferenceVisibilityHandler {}
     property var perCategoryVisibilityHandler: Cura.PerCategoryVisibilityHandler {}
     property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler
     {
@@ -477,7 +477,7 @@ Item
                     function onContextMenuRequested()
                     {
                         contextMenu.key = model.key
-                        contextMenu.settingVisible = model.visible
+                        contextMenu.settingVisible = settingPreferenceVisibilityHandler.getSettingVisible(model.key)
                         contextMenu.provider = provider
                         contextMenu.popup()                    //iconName: model.icon_name
                     }
@@ -589,16 +589,6 @@ Item
             Cura.MenuItem
             {
                 //: Settings context menu action
-                visible: filterRow.visible && !filterRow.findingSettings
-                text: catalog.i18nc("@action:menu", "Remove from favorites")
-                onTriggered:
-                {
-                    definitionsModel.hide(contextMenu.key)
-                }
-            }
-            Cura.MenuItem
-            {
-                //: Settings context menu action
                 text:
                 {
                     if (contextMenu.settingVisible)
@@ -610,16 +600,15 @@ Item
                         return catalog.i18nc("@action:menu", "Add to favorites")
                     }
                 }
-                visible: filterRow.visible && filterRow.findingSettings
                 onTriggered:
                 {
                     if (contextMenu.settingVisible)
                     {
-                        definitionsModel.hide(contextMenu.key)
+                        settingPreferenceVisibilityHandler.setSettingVisible(contextMenu.key, false)
                     }
                     else
                     {
-                        definitionsModel.show(contextMenu.key)
+                        settingPreferenceVisibilityHandler.setSettingVisible(contextMenu.key, true)
                     }
                 }
             }

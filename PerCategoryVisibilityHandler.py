@@ -5,7 +5,6 @@ from UM.Settings.Models.SettingVisibilityHandler import SettingVisibilityHandler
 from cura.CuraApplication import CuraApplication
 
 from UM.Logger import Logger
-from UM.FlameProfiler import pyqtSlot
 
 from PyQt6.QtCore import pyqtProperty, pyqtSignal
 
