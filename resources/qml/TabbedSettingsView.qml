@@ -14,12 +14,14 @@ Item
     property var tooltipItem
     property var backgroundItem
 
-    property var settingPreferenceVisibilityHandler: Cura.ExtendedSettingPreferenceVisibilityHandler {}
-    property var perCategoryVisibilityHandler: Cura.PerCategoryVisibilityHandler {}
-    property var instanceContainerVisibilityHandler: Cura.InstanceContainerVisibilityHandler
+    property var settingPreferenceVisibilityHandler: manager.getVisibilityHandler("ExtendedSettingPreference")
+    property var perCategoryVisibilityHandler: manager.getVisibilityHandler("PerCategory")
+    property var instanceContainerVisibilityHandler:
     {
-        active: false
-        containerIndex: 0
+        var handler = manager.getVisibilityHandler("InstanceContainer")
+        handler.active = false
+        handler.containerIndex = 0
+        return handler
     }
 
     property string selectedKey: categoryTabs.itemAt(categoryTabs.currentIndex).key

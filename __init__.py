@@ -8,12 +8,7 @@ from UM.Version import Version
 from UM.Application import Application
 from UM.Logger import Logger
 
-from PyQt6.QtQml import qmlRegisterType
-
 from . import TabbedSettingsPlugin
-from . import PerCategoryVisibilityHandler
-from . import InstanceContainerVisibilityHandler
-from . import ExtendedSettingPreferenceVisibilityHandler
 
 
 def getMetaData():
@@ -25,21 +20,6 @@ def register(app):
         Logger.log("w", "Plugin not loaded because of a version mismatch")
         return {}
 
-    qmlRegisterType(
-        PerCategoryVisibilityHandler.PerCategoryVisibilityHandler,
-        "Cura", 1, 0,
-        "PerCategoryVisibilityHandler",
-    )
-    qmlRegisterType(
-        InstanceContainerVisibilityHandler.InstanceContainerVisibilityHandler,
-        "Cura", 1, 0,
-        "InstanceContainerVisibilityHandler",
-    )
-    qmlRegisterType(
-        ExtendedSettingPreferenceVisibilityHandler.ExtendedSettingPreferenceVisibilityHandler,
-        "Cura", 1, 0,
-        "ExtendedSettingPreferenceVisibilityHandler",
-    )
     return {"extension": TabbedSettingsPlugin.TabbedSettingsPlugin()}
 
 
