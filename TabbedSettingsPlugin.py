@@ -20,14 +20,13 @@ class TabbedSettingsPlugin(QObject, Extension):
         super().__init__()
 
         self._qml_patcher = None
-        self._main_window = None
         CuraApplication.getInstance().engineCreatedSignal.connect(self._onEngineCreated)
 
         self._visibility_handlers = {}
 
     def _onEngineCreated(self):
-        self._main_window = CuraApplication.getInstance().getMainWindow()
-        if not self._main_window:
+        main_window = CuraApplication.getInstance().getMainWindow()
+        if not main_window:
             Logger.log(
                 "e", "Could not replace Setting View because there is no main window"
             )
@@ -59,10 +58,13 @@ class TabbedSettingsPlugin(QObject, Extension):
             )
             return
 
-        self._qml_patcher.patch(self._main_window.contentItem())
+        self._qml_patcher.patch(main_window.contentItem())
 
-    @pyqtSlot(str, result = QObject)
+    @pyqtSlot(str, result=QObject)
     def getVisibilityHandler(self, handler_type: str) -> Optional["QObject"]:
+        # NB: this is basically equivalent to registering a singleton; only a
+        # single instance of each visibilityhandler is created
+
         if handler_type not in self._visibility_handlers:
             handler = None
             if handler_type == "PerCategory":
