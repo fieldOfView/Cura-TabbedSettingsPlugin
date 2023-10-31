@@ -30,10 +30,14 @@ Item
 
         var customPrintSetup = printSetupChildren.children[1]
         var profileSelectorRow = customPrintSetup.children[0]
+        var extruderTabs = customPrintSetup.children[1]
+        print(profileSelectorRow, extruderTabs)
         customPrintSetup.children = [tabbedSettingsView]
         if(!withSidebarGUI)
         {
-            tabbedSettingsView.children[0].children = [profileSelectorRow]
+            tabbedSettingsView.children[0].children = [profileSelectorRow, extruderTabs, spacer]
+            extruderTabs.anchors.leftMargin = 3 * UM.Theme.getSize("default_margin").height
+            spacer.visible = true
         }
         tabbedSettingsView.backgroundItem = parent.children[0]
         tabbedSettingsView.tooltipItem = tooltipItem
@@ -42,5 +46,13 @@ Item
     TabbedSettingsView
     {
         id: tabbedSettingsView
+    }
+
+    Item
+    {
+        id: spacer
+        visible: false
+        height: UM.Theme.getSize("default_lining").height
+        width: 1
     }
 }
