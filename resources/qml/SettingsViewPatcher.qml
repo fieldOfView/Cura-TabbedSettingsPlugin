@@ -31,7 +31,7 @@ Item
         var customPrintSetup = printSetupChildren.children[1]
         var profileSelectorRow = customPrintSetup.children[0]
         var extruderTabs = customPrintSetup.children[1]
-        print(profileSelectorRow, extruderTabs)
+
         customPrintSetup.children = [tabbedSettingsView]
         if(!withSidebarGUI)
         {
