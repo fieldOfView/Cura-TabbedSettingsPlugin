@@ -9,6 +9,7 @@ from UM.Application import Application
 from UM.Logger import Logger
 
 from . import TabbedSettingsPlugin
+from . import TabbedSettingsIncompatibleVersion
 
 
 def getMetaData():
@@ -16,11 +17,11 @@ def getMetaData():
 
 
 def register(app):
-    if not __matchVersion():
+    if __matchVersion():
+        return {"extension": TabbedSettingsPlugin.TabbedSettingsPlugin()}
+    else:
         Logger.log("w", "Plugin not loaded because of a version mismatch")
-        return {}
-
-    return {"extension": TabbedSettingsPlugin.TabbedSettingsPlugin()}
+        return {"extension": TabbedSettingsIncompatibleVersion.TabbedSettingsIncompatibleVersion()}
 
 
 def __matchVersion():
