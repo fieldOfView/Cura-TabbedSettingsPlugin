@@ -12,7 +12,8 @@ Item
     id: settingsViewPatcher
     function patch(base_item)
     {
-        var isLE52 = (CuraSDKVersion <= "8.2.0")
+        var SortableSDKVersion = parseInt(CuraSDKVersion.replace(/\.(\d)\./g, ".0$1."))
+        var isLE52 = (SortableSDKVersion <= "8.02.0")
 
         parent = base_item
         if (isLE52) {
